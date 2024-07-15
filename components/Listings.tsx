@@ -12,11 +12,12 @@ interface Props {
 
 const Listings = ({ listings: items, category }: Props) => {
   const listRef = useRef<FlatList>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
 
   // Use for "updating" the views data after category changed
   useEffect(() => {
+    console.log('RELOADING LISTINGS', items.length);
     setLoading(true);
 
     setTimeout(() => {
@@ -26,7 +27,7 @@ const Listings = ({ listings: items, category }: Props) => {
 
   // Render one listing row for the FlatList
   const renderRow: ListRenderItem<any> = ({ item }) => (
-    <Link href={`/listing/${item.id}`} asChild>
+    <Link href={`/Listing/${item.id}`} asChild>
       <TouchableOpacity>
         <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
           <Animated.Image source={{ uri: item.medium_url }} style={styles.image} />
@@ -64,6 +65,7 @@ const Listings = ({ listings: items, category }: Props) => {
 
 const styles = StyleSheet.create({
   listing: {
+    top: 150,
     padding: 16,
     gap: 10,
     marginVertical: 16,

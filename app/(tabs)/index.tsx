@@ -7,7 +7,7 @@ import ExploreHeader from '@/components/ExploreHeader';
 
 const Page = () => {
   const items = useMemo(() => listingsData as any, []);
-  const [category, setCategory] = useState<string>('Tiny homes');
+  const [category, setCategory] = useState('Tiny homes');
 
   const onDataChanged = (category: string) => {
     setCategory(category);

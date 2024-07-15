@@ -17,7 +17,7 @@ const { width } = Dimensions.get('window');
 const IMG_HEIGHT = 300;
 
 const DetailsPage = () => {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id : string}>();
   const listing = (listingsData as any[]).find((item) => item.id === id);
   const navigation = useNavigation();
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
