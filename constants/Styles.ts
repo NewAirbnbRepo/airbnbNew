@@ -6,6 +6,16 @@ export const defaultStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FDFFFF',
   },
+  inputField1: {
+    height: 44,
+    borderWidth: 1,
+    borderColor: '#ABABAB',
+    borderRadius: 8,
+    padding: 10,
+    width: '40%',
+    backgroundColor: '#fff',
+    marginBottom: 30,
+  },
   inputField: {
     height: 44,
     borderWidth: 1,
@@ -15,7 +25,7 @@ export const defaultStyles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   btn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#044D5B',
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',

@@ -3,7 +3,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import { useRef, useState } from 'react';
 import Colors from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
@@ -22,8 +22,8 @@ const categories = [
     icon: 'local-fire-department',
   },
   {
-    name: 'Play',
-    icon: 'videogame-asset',
+    name: 'Campus',
+    icon: 'school',
   },
   {
     name: 'City',
@@ -99,6 +99,7 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
                 size={24}
                 color={activeIndex === index ? '#000' : Colors.grey}
               />
+              
               <Text style={activeIndex === index ? styles.categoryTextActive : styles.categoryText} >
                 {item.name}
               </Text>

@@ -1,15 +1,35 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
-import { Stack, router } from 'expo-router';
+import { Stack, Tabs, router, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import 'react-native-reanimated';
 import { TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
+import { supabase } from '@/lib/supabase';
+import * as SecureStore from 'expo-secure-store';
+
+
 
 SplashScreen.preventAutoHideAsync();
+const tokenCache = {
+  async getTokens(key: string) {
+    try{
+    return SecureStore.getItemAsync(key);
+  } catch(err){
+    return null;
+  }
+  },
+  async saveTokens(key: string, value: string) {
+    try{
+    return SecureStore.setItemAsync(key, value);
+  } catch(err){
+    return null;
+  }
+  }
+}
 
 export default function RootLayout() {
 
@@ -32,16 +52,36 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
- 
+  
+  return <RootLayoutNav/>
+}
+
+function RootLayoutNav (){
+
+  const router = useRouter();
+  useEffect(() => {
+    const checkUserSignedIn = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        // If user is not signed in, navigate to welcome page
+        router.push('(modals)/welcomepage');
+      }
+    };
+    checkUserSignedIn();
+    },[router]);
+
 
   return (
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="(modals)/welcomepage" options={{ headerShown: false }}/>
+        <Stack.Screen name="(modals)/campuspage" options={{ headerShown: false }}/>
         <Stack.Screen name="(modals)/login" options={{
-          title: "Log in or Sign Up",
+          title: "Log In",
           headerTitleStyle: {
-            fontFamily: 'mon-sb',
+            fontFamily: 'K2D-b',
           },
           presentation: 'modal',
           headerLeft: () =>(
@@ -59,7 +99,8 @@ export default function RootLayout() {
             </TouchableOpacity>
           )
           }}/>
-      </Stack>
+      </Stack> 
+      
 
   );
 }
