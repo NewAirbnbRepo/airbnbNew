@@ -65,7 +65,7 @@ const Listings = ({ listings: items, category }: Props) => {
 
 const styles = StyleSheet.create({
   listing: {
-    top: 150,
+    marginTop: 150,
     padding: 16,
     gap: 10,
     marginVertical: 16,
