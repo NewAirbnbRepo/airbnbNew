@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
 import * as SecureStore from 'expo-secure-store';
+import ModalHeaderText from '@/components/ModalHeaderText';
 
 
 
@@ -92,16 +93,40 @@ function RootLayoutNav (){
           )
         }}/>
         <Stack.Screen name="Listing/[id]" options={ {headerTitle: '', headerTransparent: false}}/>
-        <Stack.Screen name="(modals)/booking" options={ {presentation: 'transparentModal',
+        <Stack.Screen name="(modals)/booking" options={ {
+          presentation: 'transparentModal',
           animation: 'fade',
-        headerLeft: () =>(
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="close-outline" size={28}/>
+          headerTransparent: true,
+          headerTitle: (props) => <ModalHeaderText />,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{
+                backgroundColor: '#fff',
+                borderColor: Colors.grey,
+                borderRadius: 20,
+                borderWidth: 1,
+                padding: 4,
+              }}>
+              <Ionicons name="close-outline" size={22} />
             </TouchableOpacity>
-          )
-          }}/>
-      </Stack> 
-      
-
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/settings"
+        options={{
+          title: 'Settings',
+          headerTitleStyle: {
+            fontFamily: 'mon-sb',
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="arrow-back-outline" size={28} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+    </Stack>
   );
 }
