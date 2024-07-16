@@ -78,6 +78,7 @@ function RootLayoutNav (){
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="(modals)/welcomepage" options={{ headerShown: false }}/>
         <Stack.Screen name="(modals)/campuspage" options={{ headerShown: false }}/>
+        <Stack.Screen name="(modals)/signup" options={{ headerShown: false }}/>
         <Stack.Screen name="(modals)/login" options={{
           title: "Log In",
           headerTitleStyle: {

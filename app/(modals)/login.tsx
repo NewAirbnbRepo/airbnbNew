@@ -1,11 +1,11 @@
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert} from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Pressable} from 'react-native';
 import { defaultStyles } from '@/constants/Styles';
 import { supabase } from '@/lib/supabase'
 import { useState, useEffect } from 'react';
 import { Session } from '@supabase/supabase-js';
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
 
 
 
@@ -47,6 +47,7 @@ const Page = ({ session }: { session: Session }) => {
         autoCapitalize="none"
         placeholder="Password"
         value={password}
+        secureTextEntry={true}
         onChangeText={setPassword}
         style={[defaultStyles.inputField, { marginBottom: 30 }]}
       />
@@ -89,6 +90,12 @@ const Page = ({ session }: { session: Session }) => {
           <Ionicons name="logo-facebook" size={24} style={defaultStyles.btnIcon} />
           <Text style={styles.btnOutlineText}>Continue with Facebook</Text>
         </TouchableOpacity>
+        
+      </View>
+      <View style={styles.signup}>
+      <Text style = {styles.message2}>DON'T HAVE AN ACCOUNT? </Text>
+
+      <Link href= {'../(modals)/signup'} style = {styles.loginButton}>SIGN UP</Link>
       </View>
     </View>
   );
@@ -131,4 +138,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'mon-sb',
   },
+  message2: {
+    fontFamily : 'K2D',
+    fontWeight : '400',
+    fontSize : 16,
+    textAlign : 'center',
+    bottom : 60
+  },
+  loginButton: {
+    textAlign: 'center',
+    color : '#4EC7FD',
+    fontSize : 16,
+    fontWeight : '400',
+    fontFamily : 'K2D',
+    bottom : 50
+  },
+  signup: {
+    top: 230,
+  }
 });
