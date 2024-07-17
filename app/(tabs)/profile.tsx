@@ -29,9 +29,35 @@ const profile = ({ session }: { session: Session }) => {
   const [newLastname, setNewLastname] = useState('');
   const [newAvatar_url, setNewAvatar_url] = useState('');
   const [user, setUser] = useState([]);
+  const [updated_at, setUpdated_at] = useState('')
   
 
+  //becoming a host
+  const handleBecomeAHost = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error("User not logged in");
+      setLoading(true)
+    
 
+      // Insert a new host record with the user's ID
+      const { data, error } = await supabase.from('property').insert([
+        {
+          hostid: user.id,
+          location: 'Kumasi'
+          // Add any other host-specific data here
+        },
+      ]);
+
+      if (error) {
+        console.error('Error becoming a host:', error);
+      } else {
+        console.log('User is now a host');
+      }
+    } catch (error) {
+      console.error('Error becoming a host:', error);
+    }
+  }
 
 
   // Load user data on mount
@@ -47,7 +73,7 @@ const profile = ({ session }: { session: Session }) => {
 
         const { data, error, status } = await supabase
           .from('user')
-          .select(`firstname, lastname, username, avatar_url`)
+          .select(`firstname, lastname, username, avatar_url, created_at`)
           .eq('id', user.id)
           .single()
 
@@ -61,10 +87,9 @@ const profile = ({ session }: { session: Session }) => {
           setNewFirstname(data.firstname);
           setNewAvatar_url(data.avatar_url);
           setNewLastname(data.lastname);
+          setUpdated_at(data.created_at);
         }
-        // if (data !== null) {
-        //   setUser(data)
-        // }
+        
   }catch (error) {
     if (error instanceof Error) {
       Alert.alert(error.message)
@@ -86,10 +111,13 @@ const profile = ({ session }: { session: Session }) => {
   }) {
     try {
       setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
+      const { data: { user } } = await supabase.auth.getUser()
+        if (!user) throw new Error("User not logged in");
+        setLoading(true)
+      //if (!session?.user) throw new Error('No user on the session!')
 
       const updates = {
-        id: session?.user.id,
+        id: user.id,
         firstname: newFirstname,
         lastname: newLastname,
         avatar_url: newAvatar_url,
@@ -203,8 +231,13 @@ const profile = ({ session }: { session: Session }) => {
             )}
             </View>
             <Text>{username }</Text>
-          <Text>Since {session?.user.created_at ? new Date(session.user.created_at).toLocaleDateString() : 'Unknown'}</Text>
+          <Text>Since {updated_at}</Text>
           </View>
+
+        <TouchableOpacity  onPress={handleBecomeAHost}>
+          <Text style={styles.hostButton}>Log In As A Host?</Text>
+          </TouchableOpacity> 
+          
 
       <TouchableOpacity style={[defaultStyles.btn, styles.logoutbtn]} onPress={() => supabase.auth.signOut()} >
             <Text style={defaultStyles.btnText}>LOG OUT</Text>
@@ -290,7 +323,18 @@ const styles = StyleSheet.create({
   },
   logoutbtn: {
     alignItems: 'center',
-  }
+    width: '80%',
+    marginTop: 20,
+    left: 30
+  },
+  hostButton: {
+    textAlign: 'center',
+    color : '#4EC7FD',
+    fontSize : 16,
+    fontWeight : '400',
+    fontFamily : 'K2D',
+    //bottom : 50
+  },
 });
 
 

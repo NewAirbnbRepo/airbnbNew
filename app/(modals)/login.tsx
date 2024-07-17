@@ -1,9 +1,9 @@
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Pressable} from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import { defaultStyles } from '@/constants/Styles';
 import { supabase } from '@/lib/supabase'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { Link, router } from 'expo-router'
 
