@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase'
 import { Session } from '@supabase/supabase-js'
@@ -44,7 +44,7 @@ const profile = ({ session }: { session: Session }) => {
       const { data, error } = await supabase.from('property').insert([
         {
           hostid: user.id,
-          location: 'Kumasi'
+          //location: 
           // Add any other host-specific data here
         },
       ]);
@@ -234,7 +234,7 @@ const profile = ({ session }: { session: Session }) => {
           <Text>Since {updated_at}</Text>
           </View>
 
-        <TouchableOpacity  onPress={handleBecomeAHost}>
+        <TouchableOpacity  onPress={/*handleBecomeAHost*/ ()=> router.navigate('../(host)/FirstlyInfo')}>
           <Text style={styles.hostButton}>Log In As A Host?</Text>
           </TouchableOpacity> 
           

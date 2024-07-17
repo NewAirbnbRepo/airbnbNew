@@ -1,0 +1,213 @@
+import { defaultStyles } from '@/constants/Styles';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Checkbox, Button, RadioButton } from 'react-native-paper';
+import RNPickerSelect from 'react-native-picker-select';
+
+const App = () => {
+  const [placeType, setPlaceType] = useState('');
+  const [university, setUniversity] = useState('');
+  const [address1, setAddress1] = useState('');
+  const [address2, setAddress2] = useState('');
+  const [privateRoom, setPrivateRoom] = useState(false);
+  const [sharedRoom, setSharedRoom] = useState(false);
+  const [numPrivateRooms, setNumPrivateRooms] = useState('');
+  const [numSharedRooms, setNumSharedRooms] = useState('');
+  const [bathroomOption, setBathroomOption] = useState('yes');
+
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Tell us about your{'\n'} HomeHive!</Text>
+
+        <Text style={styles.label}>First, select the type of place</Text>
+        <View style={styles.border}>
+      <RNPickerSelect
+        onValueChange={(value) => setPlaceType(value)}
+        items={[
+          { label: 'Option 1', value: 'option1' },
+          { label: 'Option 2', value: 'option2' },
+        ]}
+        style={pickerSelectStyles}
+        placeholder={{ label: 'Select one', value: null }}
+      />
+      </View>
+
+      
+
+      <Text style={[styles.label, {top: 30}]}>Now tell us about the setting:</Text>
+      <View style={styles.seperatorView}>
+        <View
+          style={{
+            flex: 1,
+            borderBottomColor: 'black',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
+        </View>
+
+      <Text style={styles.subLabel}>University/College</Text>
+      <View style={styles.border}>
+      <RNPickerSelect
+        onValueChange={(value) => setUniversity(value)}
+        items={[
+          { label: 'University 1', value: 'university1' },
+          { label: 'University 2', value: 'university2' },
+        ]}
+        style={pickerSelectStyles}
+        placeholder={{ label: 'Which university is this for?', value: null }}
+      />
+      </View>
+
+      <Text style={styles.subLabel}>Location details</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Address 1"
+        value={address1}
+        onChangeText={setAddress1}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Address 2 (Optional)"
+        value={address2}
+        onChangeText={setAddress2}
+      />
+
+      <Text style={styles.subLabel}>What can students have?</Text>
+      <View style={styles.checkboxContainer}>
+        <Checkbox
+          status={privateRoom ? 'checked' : 'unchecked'}
+          onPress={() => setPrivateRoom(!privateRoom)}
+        />
+        <Text>Private room</Text>
+      </View>
+      <View style={styles.checkboxContainer}>
+        <Checkbox
+          status={sharedRoom ? 'checked' : 'unchecked'}
+          onPress={() => setSharedRoom(!sharedRoom)}
+        />
+        <Text>Shared room</Text>
+      </View>
+
+      <Text style={styles.subLabel}>How many private rooms?</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter number"
+        value={numPrivateRooms}
+        onChangeText={setNumPrivateRooms}
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.subLabel}>How many shared rooms?</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter number"
+        value={numSharedRooms}
+        onChangeText={setNumSharedRooms}
+        keyboardType="numeric"
+      />
+
+      <Text style={styles.subLabel}>Are there bathrooms in each room?</Text>
+      <RadioButton.Group
+        onValueChange={newValue => setBathroomOption(newValue)}
+        value={bathroomOption}
+      >
+        <View style={styles.radioContainer}>
+          <RadioButton value="yes" />
+          <Text>Yes</Text>
+        </View>
+        <View style={styles.radioContainer}>
+          <RadioButton value="no" />
+          <Text>No, they're shared</Text>
+        </View>
+      </RadioButton.Group>
+      <View style={{flexDirection: 'row', gap: 65}}>
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./FirstlyInfo')} >
+            <Text style={defaultStyles.btnText}> BACK</Text>
+          </TouchableOpacity> 
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./ThirdlyInfo')} >
+            <Text style={defaultStyles.btnText}> NEXT</Text>
+          </TouchableOpacity>
+      
+      </View>
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 40,
+    marginBottom: 8,
+  },
+  subLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  input: {
+    height: 55,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  border: {
+    borderWidth: 1,
+    borderColor: '#8B8B8B', // Set the border color to blue
+    borderRadius: 4,
+  },
+  seperatorView: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+});
+
+const pickerSelectStyles = {
+  inputIOS: {
+    height: 40,
+    borderColor: 'blue',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+    borderRadius: 3,
+    color: 'black',
+  },
+  inputAndroid: {
+    height: 40,
+    borderColor: 'blue',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 8,
+    borderRadius: 3,
+    color: 'black',
+    //backgroundColor: 'blue',
+  },
+};
+
+export default App;
