@@ -81,6 +81,7 @@ const App = () => {
         />
         <Text>Private room</Text>
       </View>
+      <Text style={styles.checkboxmessg}>Students have a room to themselves.</Text>
       <View style={styles.checkboxContainer}>
         <Checkbox
           status={sharedRoom ? 'checked' : 'unchecked'}
@@ -88,6 +89,8 @@ const App = () => {
         />
         <Text>Shared room</Text>
       </View>
+      <Text style={styles.checkboxmessg}>Students sleep in a room or common area{'\n'}
+      that could be shared with other roommates</Text>
 
       <Text style={styles.subLabel}>How many private rooms?</Text>
       <TextInput
@@ -121,7 +124,7 @@ const App = () => {
           <Text>No, they're shared</Text>
         </View>
       </RadioButton.Group>
-      <View style={{flexDirection: 'row', gap: 65}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./FirstlyInfo')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
@@ -186,6 +189,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 30,
   },
+  checkboxmessg: {
+    fontSize: 14,
+    color: '#888888',
+    marginLeft: 35,
+    marginBottom: 16,
+    top: -10,
+  },
 });
 
 const pickerSelectStyles = {
@@ -206,7 +216,6 @@ const pickerSelectStyles = {
     paddingHorizontal: 8,
     borderRadius: 3,
     color: 'black',
-    //backgroundColor: 'blue',
   },
 };
 

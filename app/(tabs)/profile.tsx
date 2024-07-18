@@ -100,15 +100,7 @@ const profile = ({ session }: { session: Session }) => {
 }
 
   // Update Clerk user data
-  async function updateProfile({
-    newFirstname,
-    newLastname,
-    newAvatar_url,
-  }: {
-    newFirstname: string
-    newLastname: string
-    newAvatar_url: string
-  }) {
+  const updateProfile = async () => {
     try {
       setLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
@@ -134,9 +126,10 @@ const profile = ({ session }: { session: Session }) => {
         Alert.alert(error.message)
       }
     } finally {
-      setLoading(false)
-    }
+      setEditing(false)
+    } 
   }
+  
 
   const updateUserProfileWithImageUrl = async (imageUrl: any) => {
     try {
@@ -224,14 +217,14 @@ const profile = ({ session }: { session: Session }) => {
                   onChangeText={setNewLastname}
                   style={[defaultStyles.inputField, { width: 100 }]}
                 />
-                <TouchableOpacity onPress={() => updateProfile({ newFirstname, newLastname, newAvatar_url })}>
+                <TouchableOpacity onPress={() => updateProfile()}>
                   <Ionicons name="checkmark-outline" size={24} />
                 </TouchableOpacity>
               </View>
             )}
             </View>
             <Text>{username }</Text>
-          <Text>Since {updated_at}</Text>
+            <Text>Since {updated_at ? new Date(updated_at).toLocaleDateString() : 'Unknown'}</Text>
           </View>
 
         <TouchableOpacity  onPress={/*handleBecomeAHost*/ ()=> router.navigate('../(host)/FirstlyInfo')}>
@@ -338,4 +331,8 @@ const styles = StyleSheet.create({
 });
 
 
+
+function setAvatar_url(uri: string) {
+  throw new Error('Function not implemented.');
+}
 
