@@ -7,6 +7,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const ProfileScreen = () => {
   return (
     <View style={styles.container}>
+        <View style={styles.header}>
+        {/* Add your progress bar here */}
+        <View style={styles.progressBar}>
+        <View style={[styles.box,]}/>
+        </View>
+      </View>
       <Text style={styles.title}>Add your photo</Text>
       <Image
         source={{ uri: 'https://example.com/profile.jpg' }} // replace with your image URL
@@ -24,7 +30,7 @@ const ProfileScreen = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./placeIdentity')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./finish')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./phoneupdate')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       
@@ -73,6 +79,21 @@ const styles = StyleSheet.create({
     color: '#045F70',
     marginBottom: 15,
   },
+  header: {
+    // Add styles for your header/progress bar here
+    marginBottom: 16,
+    marginTop: 30,
+  },
+  progressBar: {
+    backgroundColor: '#ccc',
+    width: '100%',
+    borderRadius: 5,
+  },
+  box: {
+    width: 210,
+    borderWidth: 1,
+    borderColor: 'black',
+  }
 });
 
 export default ProfileScreen;

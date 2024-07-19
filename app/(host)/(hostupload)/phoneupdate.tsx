@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
 const App = () => {
-  const [hiveName, setHiveName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const maxLength = 50;
 
   return (
@@ -16,27 +16,24 @@ const App = () => {
         </View>
       </View>
         <View style={{paddingRight: 30}}>
-      <Text style={styles.title}>Name your place</Text>
+      <Text style={styles.title}>Add your mobile number</Text>
       <Text style={styles.description}>
-        Write a quick summary of your hive. You can highlight what's special about your place, the environment, and how you'll interact with others.
+      We’ll send you booking requests, reminders,and other notifications. This number should be 
+      able to receive texts or calls
       </Text>
       <TextInput
         style={styles.input}
         placeholder="Hive name"
-        value={hiveName}
-        onChangeText={setHiveName}
+        value={phoneNumber}
+        onChangeText={setPhoneNumber}
         maxLength={maxLength}
       />
-      <Text style={styles.characterCount}>
-        {maxLength - hiveName.length} characters remaining
-      </Text>
-
-
+      
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./uploadimage')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./profileupdate')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./profileupdate')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./finish')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
         </View>
@@ -85,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   box: {
-    width: 140,
+    width: 280,
     borderWidth: 1,
     borderColor: 'black',
   }

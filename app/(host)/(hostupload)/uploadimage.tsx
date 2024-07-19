@@ -14,6 +14,9 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         {/* Add your progress bar here */}
+        <View style={styles.progressBar}>
+        <View style={[styles.box,]}/>
+        </View>
       </View>
       <Text style={styles.title}>Add photos of your Hive</Text>
       <Text style={styles.description}>
@@ -48,6 +51,7 @@ const styles = StyleSheet.create({
   header: {
     // Add styles for your header/progress bar here
     marginBottom: 16,
+    marginTop: 30,
   },
   title: {
     fontSize: 33,
@@ -81,6 +85,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  progressBar: {
+    backgroundColor: '#ccc',
+    width: '100%',
+    borderRadius: 5,
+  },
+  box: {
+    width: 70,
+    borderWidth: 1,
+    borderColor: 'black',
+  }
 });
 
 export default App;

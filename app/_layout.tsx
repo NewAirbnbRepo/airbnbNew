@@ -75,10 +75,11 @@ function RootLayoutNav (){
 
   return (
       <Stack>
+        <Stack.Screen name="(host)/(hostupload)/phoneupdate" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/(hostupload)/uploadimage" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/(hostupload)/profileupdate" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/(hostupload)/placeIdentity" options={{ headerShown: false }} />
-        <Stack.Screen name="(host)/(hostupload)/finish" options={{ headerShown: false }} />
+        <Stack.Screen name="(host)/(hostupload)/finish" options={{ headerShown: true }} />
         <Stack.Screen name="(host)/FirstlyInfo" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/ThirdlyInfo" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/SecondlyInfo" options={{ headerShown: false }} />

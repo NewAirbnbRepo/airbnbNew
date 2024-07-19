@@ -1,7 +1,7 @@
 import { defaultStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { Checkbox, Provider as PaperProvider, Divider } from 'react-native-paper';
 
 const App = () => {
@@ -25,7 +25,9 @@ const App = () => {
     <PaperProvider>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.exitText}>EXIT</Text>
+          <Pressable onPress={()=> router.navigate('../(tabs)/profile')}>
+            <Text style={styles.exitText}>EXIT</Text>
+          </Pressable>
         </View>
 
         <Text style={styles.title}>What amenities do you offer?</Text>
@@ -75,6 +77,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'flex-end',
     marginBottom: 16,
+    marginTop: 16,
   },
   exitText: {
     color: '#00695c',

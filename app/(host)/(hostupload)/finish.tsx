@@ -8,6 +8,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const App = () => {
   return (
     <View style={styles.container}>
+        <View style={styles.header}>
+        {/* Add your progress bar here */}
+        <View style={styles.progressBar}>
+        <View style={[styles.box,]}/>
+        </View>
+      </View>
       <View style={styles.stepContainer}>
         <View style={styles.stepHeader}>
           <Text style={styles.stepTitle}>Final Step!</Text>
@@ -96,6 +102,21 @@ const styles = StyleSheet.create({
   divider: {
     marginVertical: 8,
   },
+  header: {
+    // Add styles for your header/progress bar here
+    marginBottom: 16,
+    marginTop: 30,
+  },
+  progressBar: {
+    backgroundColor: '#ccc',
+    width: '100%',
+    borderRadius: 5,
+  },
+  box: {
+    width: 350,
+    borderWidth: 1,
+    borderColor: 'black',
+  }
 });
 
 export default App;
