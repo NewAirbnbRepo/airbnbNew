@@ -1,7 +1,7 @@
 import { defaultStyles } from '@/constants/Styles';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { Checkbox, Button, RadioButton } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
@@ -18,6 +18,15 @@ const App = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <View style={styles.header1}>
+            <Text style={styles.maintitle}>About your Hive</Text>
+        </View>
+      <View style={styles.header}>
+        {/* Add your progress bar here */}
+        <View style={styles.progressBar}>
+        <View style={[styles.box,]}/>
+        </View>
+      </View>
       <Text style={styles.title}>Tell us about your{'\n'} HomeHive!</Text>
 
         <Text style={styles.label}>First, select the type of place</Text>
@@ -25,8 +34,10 @@ const App = () => {
       <RNPickerSelect
         onValueChange={(value) => setPlaceType(value)}
         items={[
-          { label: 'Option 1', value: 'option1' },
-          { label: 'Option 2', value: 'option2' },
+          { label: 'Hostel', value: 'option1' },
+          { label: 'Homestel', value: 'option2' },
+          { label: 'Apartment', value: 'option3' },
+          { label: 'Campus Hall', value: 'option3' },
         ]}
         style={pickerSelectStyles}
         placeholder={{ label: 'Select one', value: null }}
@@ -51,8 +62,8 @@ const App = () => {
       <RNPickerSelect
         onValueChange={(value) => setUniversity(value)}
         items={[
-          { label: 'University 1', value: 'university1' },
-          { label: 'University 2', value: 'university2' },
+          { label: 'Kwame Nkrumah University Of Science & Technology', value: 'university1' },
+          { label: 'University of Ghana', value: 'university2' },
         ]}
         style={pickerSelectStyles}
         placeholder={{ label: 'Which university is this for?', value: null }}
@@ -143,6 +154,13 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
+  maintitle: {
+    color: '#2D0C57',
+    fontSize: 33,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    fontFamily: 'K2D-Bold',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -196,6 +214,25 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     top: -10,
   },
+  header1: {
+    marginBottom: 16,
+    marginTop: 16,
+  },
+  header: {
+    // Add styles for your header/progress bar here
+    marginBottom: 16,
+    marginTop: 30,
+  },
+  progressBar: {
+    backgroundColor: '#ccc',
+    width: '100%',
+    borderRadius: 5,
+  },
+  box: {
+    width: 120,
+    borderWidth: 1,
+    borderColor: 'black',
+  }
 });
 
 const pickerSelectStyles = {

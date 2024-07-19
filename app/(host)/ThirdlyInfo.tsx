@@ -24,12 +24,18 @@ const App = () => {
   return (
     <PaperProvider>
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
+        <View style={styles.header1}>
           <Pressable onPress={()=> router.navigate('../(tabs)/profile')}>
             <Text style={styles.exitText}>EXIT</Text>
           </Pressable>
         </View>
-
+      <View style={styles.header}>
+        {/* Add your progress bar here */}
+        <View style={styles.progressBar}>
+        <View style={[styles.box,]}/>
+        </View>
+      </View>
+        
         <Text style={styles.title}>What amenities do you offer?</Text>
         <Text style={styles.description}>
           This is important for process. Please check the boxes that apply and don’t accidentally choose something you don't have.
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  header: {
+  header1: {
     alignItems: 'flex-end',
     marginBottom: 16,
     marginTop: 16,
@@ -113,6 +119,21 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#666',
     top: 70,
+  },
+  header: {
+    // Add styles for your header/progress bar here
+    marginBottom: 16,
+    marginTop: 30,
+  },
+  progressBar: {
+    backgroundColor: '#ccc',
+    width: '100%',
+    borderRadius: 5,
+  },
+  box: {
+    width: 280,
+    borderWidth: 1,
+    borderColor: 'black',
   }
 });
 
