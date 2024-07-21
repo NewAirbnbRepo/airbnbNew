@@ -7,13 +7,7 @@ import { router } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        supabase.auth.startAutoRefresh()
-      } else {
-        supabase.auth.stopAutoRefresh()
-      }
-    })
+
 
 const signup1 = () => {
       const [loading, setLoading] = useState(false)

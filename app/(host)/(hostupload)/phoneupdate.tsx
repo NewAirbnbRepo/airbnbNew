@@ -1,16 +1,36 @@
 import { defaultStyles } from '@/constants/Styles';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 const App = () => {
+  const [loading, setLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const maxLength = 50;
+  const [done, setDone] = useState(false);
+
+  const WorkingNumber = async () => {
+    const { data: {user}} = await supabase.auth.getUser();
+    if(!user) { Alert.alert("User not logged in");
+    return;
+    }
+    const { data } = await supabase.from('property')
+      .select('hostid').eq('userid', user.id).single();
+
+    const { error: updateError} = await supabase.from('property').update({hostPhoneNumber: phoneNumber}).eq('hostid', data?.hostid)
+    if (updateError) {
+      Alert.alert('Upload failed', updateError.message);
+      setLoading(false)
+    } else {
+      console.log('phone number Upload successful');
+      router.navigate('./finish');
+    }
+  }
 
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-        {/* Add your progress bar here */}
         <View style={styles.progressBar}>
         <View style={[styles.box,]}/>
         </View>
@@ -21,21 +41,31 @@ const App = () => {
       We’ll send you booking requests, reminders,and other notifications. This number should be 
       able to receive texts or calls
       </Text>
-      <TextInput
+      {!done ?(<TextInput
         style={styles.input}
-        placeholder="Hive name"
+        placeholder="Mobile number"
         value={phoneNumber}
         onChangeText={setPhoneNumber}
         maxLength={maxLength}
-      />
+        keyboardType='numeric'
+      />):(
+      <Text style={{fontSize: 50, marginBottom: 8}}>{phoneNumber}</Text>)}
+      <Text style={styles.description}>Students must be able to use this number to get in touch with you</Text>
+      
       
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./profileupdate')} >
+          {!done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./profileupdate')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
-          </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./finish')} >
+          </TouchableOpacity>}
+         {done && <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => setDone(false)} >
+            <Text style={defaultStyles.btnText}> BACK</Text>
+          </TouchableOpacity>}
+          {!done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => setDone(true)} >
+            <Text style={defaultStyles.btnText}> CONTINUE</Text>
+          </TouchableOpacity>}
+          {done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={WorkingNumber} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </View>
       </View>
     </View>
@@ -72,7 +102,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   header: {
-    // Add styles for your header/progress bar here
     marginBottom: 16,
     marginTop: 30,
   },

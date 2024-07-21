@@ -5,14 +5,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 const App = () => {
-  const [hiveName, setHiveName] = useState('');
-  const maxLength = 50;
+  const [hiveDescription, setDescription] = useState('');
+  const maxLength = 600;
   const [loading, setLoading] = useState(false)
 
   const chaneHiveName = async () => {
     try{
       setLoading(true)
-      // Add your logic here
       const { data: {user}} = await supabase.auth.getUser();
       if(!user) { Alert.alert("User not logged in");
       return;
@@ -22,14 +21,14 @@ const App = () => {
       .select('hostid').eq('userid', user.id).single();
 
       const { error: updateError} = await supabase.from('property')
-      .update({title: hiveName}).eq('hostid', data?.hostid)
+      .update({description: hiveDescription}).eq('hostid', data?.hostid)
 
       if (updateError) {
         Alert.alert('Upload failed', updateError.message);
         setLoading(false)
       } else {
-        console.log('Hive Name Upload successful');
-        router.navigate('./description');
+        console.log('Hive Description Upload successful');
+        router.navigate('./profileupdate');
       }
       }catch (error) {
         if (error instanceof Error) {
@@ -43,25 +42,24 @@ const App = () => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-        {/* Add your progress bar here */}
         <View style={styles.progressBar}>
         <View style={[styles.box,]}/>
         </View>
       </View>
         <View style={{paddingRight: 30}}>
-      <Text style={styles.title}>Name your place</Text>
+      <Text style={styles.title}>Describe your Hive to students </Text>
       <Text style={styles.description}>
-        Write a quick summary of your hive. You can highlight what's special about your place, the environment, and how you'll interact with others.
-      </Text>
+      Write a quick summary of your hive. You can highlight what’s special about your place, the environment, and how you’ll interact with others.</Text>
       <TextInput
         style={styles.input}
-        placeholder="Hive name"
-        value={hiveName}
-        onChangeText={setHiveName}
+        placeholder="Describe the rooms, environment, etc...."
+        value={hiveDescription}
+        onChangeText={setDescription}
         maxLength={maxLength}
+        multiline={true}
       />
       <Text style={styles.characterCount}>
-        {maxLength - hiveName.length} characters remaining
+        {maxLength - hiveDescription.length} characters remaining
       </Text>
 
 
@@ -108,7 +106,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   header: {
-    // Add styles for your header/progress bar here
     marginBottom: 16,
     marginTop: 30,
   },

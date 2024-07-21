@@ -1,20 +1,62 @@
 import { defaultStyles } from '@/constants/Styles';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, Pressable, Alert, Platform } from 'react-native';
 import { Checkbox, Button, RadioButton } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
 
 const App = () => {
+  const [loading, setLoading] = useState(false);
   const [placeType, setPlaceType] = useState('');
   const [university, setUniversity] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
   const [privateRoom, setPrivateRoom] = useState(false);
   const [sharedRoom, setSharedRoom] = useState(false);
-  const [numPrivateRooms, setNumPrivateRooms] = useState('');
-  const [numSharedRooms, setNumSharedRooms] = useState('');
-  const [bathroomOption, setBathroomOption] = useState('yes');
+  const [numPrivateRooms, setNumPrivateRooms] = useState(0);
+  const [numSharedRooms, setNumSharedRooms] = useState(0);
+  const [bathroomOption, setBathroomOption] = useState('no');
+
+  const handleSubmit = async () => {
+    try{
+    const { data:{user}} = await supabase.auth.getUser();
+    if(!user) { Alert.alert("User not logged in");
+      setLoading(false);
+      return;
+      }
+    const { error} = await supabase.from('property').insert([
+      {
+        userid: user.id,
+        typeofplace: placeType,
+        university: university,
+        address1: address1,
+        address2: address2,
+        private_room: privateRoom,
+        shared_room: sharedRoom,
+        private_room_amount: numPrivateRooms,
+        shared_room_amount: numSharedRooms,
+        singlebath: bathroomOption,
+      }
+    ])
+
+    setLoading(false);
+    if (error) {
+      Alert.alert('Uploading data failed', error.message);
+      setLoading(false)
+    } else {
+      console.log('Sign Up successful');
+      router.navigate('./ThirdlyInfo');
+    }
+    } catch (error) {
+    if (error instanceof Error) {
+      Alert.alert(error.message)
+    }
+    } finally {
+    setLoading(false)
+  }
+  }
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -22,7 +64,6 @@ const App = () => {
             <Text style={styles.maintitle}>About your Hive</Text>
         </View>
       <View style={styles.header}>
-        {/* Add your progress bar here */}
         <View style={styles.progressBar}>
         <View style={[styles.box,]}/>
         </View>
@@ -34,10 +75,10 @@ const App = () => {
       <RNPickerSelect
         onValueChange={(value) => setPlaceType(value)}
         items={[
-          { label: 'Hostel', value: 'option1' },
-          { label: 'Homestel', value: 'option2' },
-          { label: 'Apartment', value: 'option3' },
-          { label: 'Campus Hall', value: 'option3' },
+          { label: 'Hostel', value: 'Hostel' },
+          { label: 'Homestel', value: 'Homestel' },
+          { label: 'Apartment', value: 'Apartment' },
+          { label: 'Campus Hall', value: 'Campus Hall' },
         ]}
         style={pickerSelectStyles}
         placeholder={{ label: 'Select one', value: null }}
@@ -103,23 +144,23 @@ const App = () => {
       <Text style={styles.checkboxmessg}>Students sleep in a room or common area{'\n'}
       that could be shared with other roommates</Text>
 
-      <Text style={styles.subLabel}>How many private rooms?</Text>
-      <TextInput
+      {privateRoom && <Text style={styles.subLabel}>How many private rooms?</Text>}
+      {privateRoom &&<TextInput
         style={styles.input}
         placeholder="Enter number"
-        value={numPrivateRooms}
-        onChangeText={setNumPrivateRooms}
+        value={numPrivateRooms.toString()}
+        onChangeText={(text) => setNumPrivateRooms(parseFloat(text))}
         keyboardType="numeric"
-      />
+      />}
 
-      <Text style={styles.subLabel}>How many shared rooms?</Text>
-      <TextInput
+      {sharedRoom && <Text style={styles.subLabel}>How many shared rooms?</Text>}
+      {sharedRoom &&<TextInput
         style={styles.input}
         placeholder="Enter number"
-        value={numSharedRooms}
-        onChangeText={setNumSharedRooms}
+        value={numSharedRooms.toString()}
+        onChangeText={(text) => setNumSharedRooms(parseFloat(text))}
         keyboardType="numeric"
-      />
+      />}
 
       <Text style={styles.subLabel}>Are there bathrooms in each room?</Text>
       <RadioButton.Group
@@ -127,11 +168,15 @@ const App = () => {
         value={bathroomOption}
       >
         <View style={styles.radioContainer}>
-          <RadioButton value="yes" />
+          <RadioButton
+          color={Platform.OS === 'ios' ? '#007AFF' : undefined}
+           value="yes" />
           <Text>Yes</Text>
         </View>
         <View style={styles.radioContainer}>
-          <RadioButton value="no" />
+          <RadioButton
+          uncheckedColor={Platform.OS === 'ios' ? 'yellow' : undefined}
+           value="no" />
           <Text>No, they're shared</Text>
         </View>
       </RadioButton.Group>
@@ -139,7 +184,7 @@ const App = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./FirstlyInfo')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./ThirdlyInfo')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={handleSubmit} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       
@@ -159,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 33,
     fontWeight: 'bold',
     marginBottom: 8,
-    fontFamily: 'K2D-Bold',
+    fontFamily: 'K2D',
   },
   title: {
     fontSize: 24,
@@ -198,7 +243,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderWidth: 1,
-    borderColor: '#8B8B8B', // Set the border color to blue
+    borderColor: '#8B8B8B', 
     borderRadius: 4,
   },
   seperatorView: {
@@ -219,7 +264,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   header: {
-    // Add styles for your header/progress bar here
     marginBottom: 16,
     marginTop: 30,
   },
@@ -236,15 +280,11 @@ const styles = StyleSheet.create({
 });
 
 const pickerSelectStyles = {
-  inputIOS: {
-    height: 40,
-    borderColor: 'blue',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingHorizontal: 8,
-    borderRadius: 3,
-    color: 'black',
-  },
+   inputIOS: {
+     height: 40,
+     marginBottom: 12,
+     color: 'black',
+   },
   inputAndroid: {
     height: 40,
     borderColor: 'blue',

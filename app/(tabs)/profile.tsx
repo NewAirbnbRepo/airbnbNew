@@ -185,7 +185,7 @@ const profile = ({ session }: { session: Session }) => {
       <View style={styles.card}>
         <View>
         <TouchableOpacity onPress={onCaptureImage}>
-          <Image source={{ uri: avatar_url  || '@/assets/images/avatar.png'}} style={styles.avatar} />
+          <Image source={avatar_url? { uri: avatar_url }: require('../../assets/images/avatar.png')} style={styles.avatar} />
         </TouchableOpacity>
         </View>
         
@@ -330,9 +330,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-function setAvatar_url(uri: string) {
-  throw new Error('Function not implemented.');
-}
 

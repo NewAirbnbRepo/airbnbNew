@@ -1,8 +1,18 @@
+import { supabase } from '@/lib/supabase';
 import { Link } from 'expo-router';
 import React from 'react'
-import { Text, View, Image, ImageBackground, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
+import { Text, View, Image, ImageBackground, StyleSheet, Pressable, TouchableOpacity, AppState } from 'react-native'
 
 const image = ('@/assets/images/Rectangle 46.png');
+
+
+AppState.addEventListener('change', (state) => {
+  if (state === 'active') {
+    supabase.auth.startAutoRefresh()
+  } else {
+    supabase.auth.stopAutoRefresh()
+  }
+})
 
 const signup = () =>{
     return (

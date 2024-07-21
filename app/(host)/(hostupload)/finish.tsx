@@ -9,7 +9,6 @@ const App = () => {
   return (
     <View style={styles.container}>
         <View style={styles.header}>
-        {/* Add your progress bar here */}
         <View style={styles.progressBar}>
         <View style={[styles.box,]}/>
         </View>
@@ -50,7 +49,7 @@ const App = () => {
         <Text style={styles.stepDescription}>
           Set price, booking settings, etc
         </Text>
-        <TouchableOpacity onPress={() => { /* Handle Continue action */router.navigate('./(hostupload)/uploadimage' )}} style={[defaultStyles.btn, {width: 150, marginBottom: 15}]}>
+        <TouchableOpacity onPress={() => { /* Handle Continue action */router.navigate('./uploadimage')}} style={[defaultStyles.btn, {width: 150, marginBottom: 15}]}>
           <Text style={defaultStyles.btnText}>CONTINUE</Text>
         </TouchableOpacity>
       </View>
@@ -103,7 +102,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   header: {
-    // Add styles for your header/progress bar here
     marginBottom: 16,
     marginTop: 30,
   },
