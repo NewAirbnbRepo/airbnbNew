@@ -1,38 +1,102 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity, Pressable, Platform } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, TouchableOpacity, Pressable, Platform, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { defaultStyles } from '@/constants/Styles';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { supabase } from '@/lib/supabase';
+import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 
 
 const PricingSettings = () => {
+  const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState<String>('');
   const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [date1, setDate1] = useState(new Date());
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [start_date, setStart_date] = useState('')
   const [end_date, setEnd_date] =useState('')
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
-    if(event.type == "set"){
-    const currentDate = selectedDate || new Date;
-    setDate(currentDate);
-    //setShowDatePicker(false);
+  const handlePriceChange = (text: string) => {
+    // Allow only numbers and a single decimal point
+    const validText = text.replace(/[^0-9.]/g, '');
+    const decimalCount = (validText.match(/\./g) || []).length;
 
-    if (Platform.OS === "android") {
-      toggleDatepicker();
-      //toggleDatepicker1();
-      setStart_date(currentDate.toDateString());
-      //setEnd_date (currentDate.toDateString());
-    }
-    }else {
-    toggleDatepicker();
+    if (decimalCount <= 1) {
+      setPrice(validText);
     }
   };
 
-  const toggleDatepicker = () =>{
-    setShowDatePicker(!showDatePicker);
+
+  const handleUpload = async () => {
+    try {
+      setLoading(true);
+      // Add your logic here
+      const { data: {user}} = await supabase.auth.getUser();
+      if(!user) { Alert.alert("User not logged in");
+      return;
+      }
+
+      const { data } = await supabase.from('property')
+      .select('hostid').eq('userid', user.id).single();
+
+      const { error: updateError} = await supabase.from('property')
+      .update({
+        price_per_year: price,
+        availability_start_date: start_date,
+        availability_end_date: end_date
+      }).eq('hostid', data?.hostid)
+
+      if (updateError) {
+        Alert.alert('Upload failed', updateError.message);
+        setLoading(false)
+      } else {
+        console.log('Upload successful');
+        router.navigate('./page3');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStartDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (event.type === 'set') {
+      const currentDate = selectedDate || new Date();
+      setDate(currentDate);
+      setShowStartDatePicker(false);
+    } else {
+      setShowStartDatePicker(false);
+    }if (Platform.OS === "android") {
+      const currentDate = selectedDate || new Date();
+      setStart_date(currentDate.toDateString());
+    }
+  };
+
+  const handleEndDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (event.type === 'set') {
+      const currentDate = selectedDate || new Date();
+      setDate1(currentDate);
+      setShowEndDatePicker(false);
+    } else {
+      setShowEndDatePicker(false);
+    }if (Platform.OS === "android") {
+      const currentDate = selectedDate || new Date();
+      setEnd_date(currentDate.toDateString());
+    }
+  };
+    //setShowDatePicker(false);
+
+  const openStartDatePicker = () => {
+    setShowStartDatePicker(true);
+  };
+
+  const openEndDatePicker = () => {
+    setShowEndDatePicker(true);
   };
 
 
@@ -47,52 +111,67 @@ const PricingSettings = () => {
       <Text style={styles.description}>
         This will be your default price for a year. You can change it anytime.
       </Text>
-      <TextInput style={styles.input} keyboardType='numeric' placeholder="₵" />
+      <View style= {{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <TextInput style={styles.input} 
+        keyboardType='decimal-pad' 
+        placeholder="₵" 
+        value={price !== null ? price.toString() : ''}
+        onChangeText={handlePriceChange}
+        />
+        <Picker selectedValue="GHC" style={styles.picker}>
+          <Picker.Item label="GHC" value="GHC" />
+          {/* Add more currency options here */}
+        </Picker>
+      </View>
       <Text style={styles.tip}>Tip: ₵ 8500</Text>
 
       <Text style={styles.sectionTitle}>Available Start Date</Text>
       <Text style={styles.description}>
         When demand for your place is low, you may choose this price to attract more guests
       </Text>
-      {showDatePicker &&<DateTimePicker
+      {showStartDatePicker &&<DateTimePicker
           value={date}
           mode="date"
           display="spinner"
-          onChange={handleDateChange}
+          onChange={handleStartDateChange}
           style={styles.datePicker}
         />}
-        {showDatePicker && Platform.OS === 'ios' &&
+        {showStartDatePicker && Platform.OS === 'ios' &&
         <View style= {{flexDirection: 'row', justifyContent: 'space-around'}}>
           
         </View>}
-      {! showDatePicker &&<Pressable onPress={toggleDatepicker}>
+      <Pressable onPress={openStartDatePicker}>
         <TextInput style={styles.input} 
         editable={false} 
         placeholder="date" 
         value={start_date} 
         onChangeText={setStart_date}
-        onPressIn={toggleDatepicker}
+        onFocus={openStartDatePicker}
         />
-      </Pressable>}
+      </Pressable>
       <Text style={styles.tip}>Tip: ₵ 8000</Text>
 
       <Text style={styles.sectionTitle}>End date</Text>
       <Text style={styles.description}>
         If demand for your place is high, set the highest price you’re willing to charge
       </Text>
-      {showDatePicker &&<DateTimePicker
-          value={date}
+      {showEndDatePicker &&<DateTimePicker
+          value={date1}
           mode="date"
           display="spinner"
-          onChange={handleDateChange}
+          onChange={handleEndDateChange}
         />}
-      <Text style={styles.tip}>Tip: ₵ 9000</Text>
 
-      <Text style={styles.sectionTitle}>Currency</Text>
-      <Picker selectedValue="GHC" style={styles.picker}>
-        <Picker.Item label="GHC" value="GHC" />
-        {/* Add more currency options here */}
-      </Picker>
+      <Pressable onPress={openEndDatePicker}>
+        <TextInput style={styles.input} 
+        editable={false} 
+        placeholder="date" 
+        value={end_date} 
+        onChangeText={setEnd_date}
+        onFocus={openEndDatePicker}
+        />
+      </Pressable>
+      <Text style={styles.tip}>Tip: ₵ 9000</Text>
 
       <Text style={styles.footerText}>You’re always in control of the pricing you set!</Text>
       <Text style={styles.link}>Use base price only</Text>
@@ -101,7 +180,7 @@ const PricingSettings = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('./page1')} >
             <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={() => router.navigate('./page3')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={handleUpload/*() => router.navigate('./page3')*/} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       
@@ -161,8 +240,9 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   picker: {
+    bottom: 5,
     height: 50,
-    width: '100%',
+    width: '40%',
     marginBottom: 15,
   },
   footerText: {
@@ -174,7 +254,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'blue',
     textAlign: 'center',
-    //marginBottom: 20,
+    marginBottom: 20,
   },
   buttonContainer: {
     flexDirection: 'row',
