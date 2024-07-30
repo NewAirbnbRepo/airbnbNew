@@ -34,6 +34,8 @@ export const defaultStyles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: '#044D5B',
+    borderWidth: 1
   },
   btnText: {
     color: '#fff',

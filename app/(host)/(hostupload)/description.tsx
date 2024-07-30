@@ -67,7 +67,7 @@ const App = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./uploadimage')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={chaneHiveName} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={/*chaneHiveName*/()=> router.navigate('./profileupdate')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
         </View>

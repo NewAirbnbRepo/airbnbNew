@@ -197,7 +197,7 @@ const App = () => {
         )}
         {showUpload4 && (
       <TouchableOpacity onPress={uploadPhotos5}>
-          <Image source={showUpload? {uri: showUpload5}: require('../../../assets/images/gettyimages.jpg')} style={styles.uploadContainer} /> 
+          <Image source={showUpload? {uri: showUpload5}: require('../../../assets/images/gettyimages.png')} style={styles.uploadContainer} /> 
           <View style={{alignItems: 'center'}}>
               {!showUpload5 && <View style={styles.uploadButton }>
                 <Text style={styles.uploadButtonText}>+ ADD IMAGE</Text>
@@ -212,10 +212,10 @@ const App = () => {
       </TouchableOpacity>}
 
       <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30}}>
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('../finish')} >
-            <Text style={defaultStyles.btnText}> BACK</Text>
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('../finish')} >
+            <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./placeIdentity')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={() => router.navigate('./placeIdentity')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       
@@ -226,7 +226,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     padding: 16,
     backgroundColor: '#fff',
   },

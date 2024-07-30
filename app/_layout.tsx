@@ -85,6 +85,7 @@ function RootLayoutNav (){
         <Stack.Screen name="(host)/ThirdlyInfo" options={{ headerShown: false }} />
         <Stack.Screen name="(host)/SecondlyInfo" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(host)/(hostupload)/(hostupdate)/(hostmainpage)/MainTabNavigator/MainTabNavigator" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
         <Stack.Screen name="(modals)/welcomepage" options={{ headerShown: false }}/>
         <Stack.Screen name="(modals)/campuspage" options={{ headerShown: false }}/>

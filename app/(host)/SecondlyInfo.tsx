@@ -184,7 +184,7 @@ const App = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./FirstlyInfo')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={handleSubmit} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={/*handleSubmit*/()=> router.navigate('./ThirdlyInfo')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       

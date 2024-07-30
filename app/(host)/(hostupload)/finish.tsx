@@ -49,7 +49,7 @@ const App = () => {
         <Text style={styles.stepDescription}>
           Set price, booking settings, etc
         </Text>
-        <TouchableOpacity onPress={() => { /* Handle Continue action */router.navigate('./uploadimage')}} style={[defaultStyles.btn, {width: 150, marginBottom: 15}]}>
+        <TouchableOpacity onPress={() => { /* Handle Continue action */router.navigate('./(hostupdate)/page1')}} style={[defaultStyles.btn, {width: 150, marginBottom: 15}]}>
           <Text style={defaultStyles.btnText}>CONTINUE</Text>
         </TouchableOpacity>
       </View>
