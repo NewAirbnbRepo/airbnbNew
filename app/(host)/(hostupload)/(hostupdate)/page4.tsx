@@ -1,23 +1,77 @@
 import { defaultStyles } from '@/constants/Styles';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
-import { Switch, Checkbox, Button } from 'react-native-paper';
+import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, Pressable, Alert } from 'react-native';
+import { Switch, Checkbox } from 'react-native-paper';
 
 const HouseRules = () => {
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [done1, setDone1] = useState(false);
+  const [done2, setDone2] = useState(false);
+  const [done3, setDone3] = useState(false);
+  const [done4, setDone4] = useState(false);
+
   const [children, setChildren] = useState(false);
   const [infants, setInfants] = useState(false);
   const [pets, setPets] = useState(false);
   const [smoking, setSmoking] = useState(false);
   const [events, setEvents] = useState(false);
-  const [additionalRules, setAdditionalRules] = useState('');
   const [stairs, setStairs] = useState( false)
-  const [noise, setNoice] = useState(false)
   const [petsOnProperty, setPetsOnProperty] = useState(false)
   const [noParking, setNoParking] = useState (false)
-  const [sharedSpaces, setSharedSpaces] = useState(false)
   const [surveillance, setSurveillance] = useState(false)
-  const [dangerousAnimals, setDangerousAnimals] = useState(false)
+
+  const [additionalRules, setAdditionalRules] = useState('');
+  const [additionalRules1, setAdditionalRules1] = useState('');
+  const [additionalRules2, setAdditionalRules2] = useState('');
+  const [additionalRules3, setAdditionalRules3] = useState('');
+  const [additionalRules4, setAdditionalRules4] = useState('');
+
+  const handleNext = async() => {
+    try {
+      setLoading(true);
+      const {data: {user}} = await supabase.auth.getUser();
+      if (!user) {
+        Alert.alert('User not logged in');
+        return;
+      }
+
+      const{ data } = await supabase.from('property')
+      .select('host_id').eq('userid', user.id).single();
+
+      const { error: updateError } = await supabase.from('hiverules')
+      .insert({
+        host_id: data?.host_id,
+        children,
+        infants,
+        pets,
+        smoking,
+        event: events,
+        stairs,
+        noparking: noParking,
+        surveillance,
+        additionalrules1: additionalRules,
+        additionalrules2: additionalRules1,
+        additionalrules3: additionalRules2,
+        additionalrules4: additionalRules3,
+        additionalrules5: additionalRules4,
+      })
+
+      if(updateError) {
+        Alert.alert('Upload failed', updateError.message);
+        setLoading(false);
+      } else {
+        console.log('Upload successful');
+        router.navigate('./page5');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
 
   return (
@@ -51,6 +105,38 @@ const HouseRules = () => {
         <Switch value={events} onValueChange={setEvents} />
       </View>
 
+      {done &&<View style={styles.ruleContainer}>
+        <Text style={styles.ruleText}>{additionalRules}</Text>
+        <Pressable onPress={()=> setDone(!done)}> 
+          <Text style={styles.ruleText}>EDIT</Text> 
+        </Pressable>
+      </View>}
+      {done1 &&<View style={styles.ruleContainer}>
+        <Text style={styles.ruleText}>{additionalRules1}</Text>
+        <Pressable onPress={()=> setDone1(!done1)}> 
+          <Text style={styles.ruleText}>EDIT</Text> 
+        </Pressable>
+      </View>}
+      {done2 &&<View style={styles.ruleContainer}>
+        <Text style={styles.ruleText}>{additionalRules2}</Text>
+        <Pressable onPress={()=> setDone2(!done2)}>
+          <Text style={styles.ruleText}>EDIT</Text>
+        </Pressable>
+      </View>}
+      {done3 &&<View style={styles.ruleContainer}>
+        <Text style={styles.ruleText}>{additionalRules3}</Text>
+        <Pressable onPress={()=> setDone3(!done3)}>
+          <Text style={styles.ruleText}>EDIT</Text>
+        </Pressable>
+      </View>}
+      {done4 &&<View style={styles.ruleContainer}>
+        <Text style={styles.ruleText}>{additionalRules4}</Text>
+        <Pressable onPress={()=> setDone4(!done4)}>
+          <Text style={styles.ruleText}>EDIT</Text>
+        </Pressable>
+      </View>}
+
+      {!done &&<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
       <TextInput
         style={styles.input}
         placeholder="Anything else?"
@@ -58,9 +144,62 @@ const HouseRules = () => {
         onChangeText={setAdditionalRules}
         multiline={true}
       />
-      <Button mode="contained" onPress={() => { /* Add functionality to handle additional rules */ }} style={styles.addButton}>
-        Add
-      </Button>
+      <TouchableOpacity style={[defaultStyles.btn, {width: '30%'}]} onPress={()=>setDone(true)} >
+        <Text style={defaultStyles.btnText}> ADD</Text>
+      </TouchableOpacity>
+      </View>}
+
+      {!done1 && done &&<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TextInput
+        style={styles.input}
+        placeholder="Anything else?"
+        value={additionalRules1}
+        onChangeText={setAdditionalRules1}
+        multiline={true}
+      />
+      <TouchableOpacity style={[defaultStyles.btn, {width: '30%'}]} onPress={()=>setDone1(true)} >
+        <Text style={defaultStyles.btnText}> ADD</Text>
+      </TouchableOpacity>
+      </View>}
+
+      {!done2 && done1 &&<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TextInput
+        style={styles.input}
+        placeholder="Anything else?"
+        value={additionalRules2}
+        onChangeText={setAdditionalRules2}
+        multiline={true}
+      />
+      <TouchableOpacity style={[defaultStyles.btn, {width: '30%'}]} onPress={()=>setDone2(true)} >
+        <Text style={defaultStyles.btnText}> ADD</Text>
+      </TouchableOpacity>
+      </View>}
+
+      {!done3 && done2 &&<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TextInput
+        style={styles.input}
+        placeholder="Anything else?"
+        value={additionalRules3}
+        onChangeText={setAdditionalRules3}
+        multiline={true}
+      />
+      <TouchableOpacity style={[defaultStyles.btn, {width: '30%'}]} onPress={()=>setDone3(true)} >
+        <Text style={defaultStyles.btnText}> ADD</Text>
+      </TouchableOpacity>
+      </View>}
+
+      {!done4 && done3 &&<View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <TextInput
+        style={styles.input}
+        placeholder="Anything else?"
+        value={additionalRules4}
+        onChangeText={setAdditionalRules4}
+        multiline={true}
+      />
+      <TouchableOpacity style={[defaultStyles.btn, {width: '30%'}]} onPress={()=>setDone4(true)} >
+        <Text style={defaultStyles.btnText}> ADD</Text>
+      </TouchableOpacity>
+      </View>}
 
       <Text style={styles.detailsTitle}>Details students must know about your hive</Text>
       <View>
@@ -72,14 +211,7 @@ const HouseRules = () => {
         <Text>Must climb stairs</Text>
       </View>
 
-      <View style={styles.checkboxContainer}>
-        <Checkbox
-          status={noise ? 'checked' : 'unchecked'}
-          onPress={() => setNoice(!noise)}
-        />
-        <Text>Potential for noise</Text>
-      </View>
-
+      
       <View style={styles.checkboxContainer}>
         <Checkbox
           status={petsOnProperty ? 'checked' : 'unchecked'}
@@ -95,13 +227,7 @@ const HouseRules = () => {
           />
           <Text>No parking on property</Text>
         </View>
-      <View style={styles.checkboxContainer}>
-        <Checkbox
-          status={sharedSpaces ? 'checked' : 'unchecked'}
-          onPress={() => setSharedSpaces(!sharedSpaces)}
-        />
-        <Text>Some spaces are shared</Text>
-      </View>
+      
       <View style={styles.checkboxContainer}>
         <Checkbox
           status={surveillance ? 'checked' : 'unchecked'}
@@ -109,20 +235,13 @@ const HouseRules = () => {
         />
         <Text>Surveillance or recording devices on property</Text>
       </View>
-      <View style={styles.checkboxContainer}>
-        <Checkbox
-          status={dangerousAnimals ? 'checked' : 'unchecked'}
-          onPress={() => setDangerousAnimals(!dangerousAnimals)}
-        />
-        <Text>Dangerous animals live on property</Text>
-      </View>
 
     </View>
     <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30}}>
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('./page3')} >
             <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={() => router.navigate('./pagr5')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={/*handleNext*/() => router.navigate('./page5')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       
@@ -160,6 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   input: {
+    width: '70%',
     borderWidth: 1,
     borderColor: '#ccc',
     padding: 10,

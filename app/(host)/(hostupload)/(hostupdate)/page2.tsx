@@ -180,7 +180,7 @@ const PricingSettings = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('./page1')} >
             <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={handleUpload/*() => router.navigate('./page3')*/} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={/*handleUpload*/() => router.navigate('./page3')} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       

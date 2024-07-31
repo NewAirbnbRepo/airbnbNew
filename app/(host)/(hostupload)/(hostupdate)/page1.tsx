@@ -20,7 +20,7 @@ const StudentRequirements = () => {
       <Text style={styles.requirement}>✓ Informed you about their arrival dates</Text>
       <Text style={styles.requirement}>✓ Let you know how many people are coming</Text>
 
-      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30, marginTop: 30}}>
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('../finish')} >
             <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
