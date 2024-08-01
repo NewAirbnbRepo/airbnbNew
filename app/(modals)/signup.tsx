@@ -3,7 +3,7 @@ import { ScrollView, View, StyleSheet, TextInput, Text, TouchableOpacity, Alert,
 import { defaultStyles } from '@/constants/Styles';
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
-import { router } from 'expo-router'
+import { router, useRouter } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -26,6 +26,7 @@ const signup1 = () => {
 
       const handleSignUp = async () => {
             setLoading(true);
+            const router = useRouter();
         
             // Create a new user with Supabase authentication
             const { data: {session}, error } = await supabase.auth.signUp({

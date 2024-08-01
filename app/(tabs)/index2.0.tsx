@@ -1,72 +1,103 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  View,
-  Image,
-  Text,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, View, Image, Text } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { supabase } from '@/lib/supabase';
+import { Link } from 'expo-router';
+import Listings from '@/components/listings2.0';
 
-useEffect(()=> {
-    const fetchData = async () =>{
-        const {data, error} = await supabase
-        .from('host')
-        .select('*')
-    }
-    
-})
-
-
-const places = [
-  {
-    id: 1,
-    img: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Marbella, Spain',
-    dates: 'Apr 23 - May 5',
-    price: 200,
-    rating: 4.45,
-    reviews: 124,
-  },
-  {
-    id: 2,
-    img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    name: 'Baveno, Italy',
-    dates: 'Apr 25 - May 5',
-    price: 320,
-    rating: 4.81,
-    reviews: 409,
-  },
-  {
-    id: 3,
-    img: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-    name: 'Tucson, Arizona',
-    dates: 'Apr 22 - May 4',
-    price: 695,
-    rating: 4.3,
-    reviews: 72,
-  },
-];
+type Place = {
+  userid: any;
+  title: any;
+  availability_start_date: any;
+  availability_end_date: any;
+  price_per_year: any;
+  hostPhoneNumber: any;
+  shared_room_amount: any;
+  images: string[];
+};
 
 export default function Example() {
+  const [places, setPlaces] = useState<Place[]>([]);
   const [saved, setSaved] = useState<number[]>([]);
 
-  const handleSave = useCallback(
-    (id: any) => {
-      if (saved.includes(id)) {
-        // remove listing id from the `saved` array
-        setSaved(saved.filter(val => val !== id));
-      } else {
-        // add listing id to the `saved` array
-        setSaved([...saved, id]);
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        let { data, error } = await supabase
+          .from('property')
+          .select(`
+            userid,
+            title,
+            availability_start_date,
+            availability_end_date,
+            price_per_year,
+            hostPhoneNumber,
+            shared_room_amount
+          `);
+
+        if (error) {
+          console.error('Error fetching places:', error);
+          return;
+        }
+
+        if (!data) {
+          console.error('No data returned from the query');
+          return;
+        }
+
+        const placesWithImages: Place[] = await Promise.all(
+          data.map(async (place: any) => {
+            const { data: imageList, error: imageError } = await supabase
+              .storage
+              .from('homehive')
+              .list(`${place.userid}`);
+
+              //console.log(place.userid)
+
+            if (imageError) {
+              console.error('Error fetching images:', imageError);
+              return { ...place, images: [] };
+            }
+
+            const images = imageList.map((img) => {
+              const { data: publicUrlData } = supabase.storage
+                .from('homehive')
+                .getPublicUrl(`${place.userid}/${img.name}`);
+              return publicUrlData.publicUrl;
+            });
+            //console.log(images)
+
+            return { ...place, images };
+            
+          })
+        );
+
+        setPlaces(placesWithImages);
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    },
-    [saved],
-  );
+    };
+
+    fetchPlaces();
+  }, []);
+
+  const handleSave = (id: number) => {
+    if (saved.includes(id)) {
+      setSaved(saved.filter(val => val !== id));
+    } else {
+      setSaved([...saved, id]);
+    }
+  };
+
+  function spellOutMonth(dateString: string): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric', /*year: 'numeric'*/ };
+    const month = date.toLocaleDateString('en-US', options);
+    return month;
+  }
+  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f2f2f2' }}>
@@ -90,20 +121,23 @@ export default function Example() {
         <Text style={styles.headerTitle}>Places to stay</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} >
         {places.map(
-          ({ id, img, name, dates, price, rating, reviews }, index) => {
-            const isSaved = saved.includes(id);
+          ({ userid, images, title, availability_start_date, availability_end_date, price_per_year, hostPhoneNumber, shared_room_amount }) => {
+            const isSaved = saved.includes(userid);
 
             return (
+              <Link key={userid} href={{ pathname: 'details', params: { ...places[userid] } }} asChild>
               <TouchableOpacity
-                key={id}
+                key={userid}
+                activeOpacity={0.9}
+                delayPressIn={250.0}
                 onPress={() => {
                   // handle onPress
                 }}>
                 <View style={styles.card}>
                   <View style={styles.cardLikeWrapper}>
-                    <TouchableOpacity onPress={() => handleSave(id)}>
+                    <TouchableOpacity onPress={() => handleSave(userid)}>
                       <View style={styles.cardLike}>
                         <FontAwesome
                           color={isSaved ? '#ea266d' : '#222'}
@@ -115,16 +149,28 @@ export default function Example() {
                   </View>
 
                   <View style={styles.cardTop}>
-                    <Image
-                      alt=""
-                      resizeMode="cover"
-                      style={styles.cardImg}
-                      source={{ uri: img }} />
+                    {images.length > 0 ? (
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} pagingEnabled>
+                        {images.map((image, index) => (
+                          <Image
+                            key={index}
+                            resizeMode='stretch'
+                            style={styles.cardImg}
+                            source={{ uri: image }}
+                            onError={(e) => console.error('Error loading image:', e.nativeEvent.error)}
+                          />
+                        ))}
+                      </ScrollView>
+                    ) : (
+                      <View style={styles.cardImgPlaceholder}>
+                        <Text>No Images Available</Text>
+                      </View>
+                    )}
                   </View>
 
                   <View style={styles.cardBody}>
                     <View style={styles.cardHeader}>
-                      <Text style={styles.cardTitle}>{name}</Text>
+                      <Text style={styles.cardTitle}>{title}</Text>
 
                       <FontAwesome
                         color="#ea266d"
@@ -133,22 +179,26 @@ export default function Example() {
                         size={12}
                         style={{ marginBottom: 2 }} />
 
-                      <Text style={styles.cardStars}>{rating}</Text>
+                      <Text style={styles.cardStars}>{hostPhoneNumber}</Text>
 
                       <Text style={{ color: '#595a63' }}>
-                        ({reviews} reviews)
+                        ({shared_room_amount} reviews)
                       </Text>
                     </View>
 
-                    <Text style={styles.cardDates}>{dates}</Text>
+                    <Text style={styles.cardDates}>
+                      {availability_start_date ? spellOutMonth(availability_start_date) : 'N/A'} 
+                      - {availability_end_date ? spellOutMonth(availability_end_date) : 'N/A'}
+                    </Text>
 
                     <Text style={styles.cardPrice}>
-                      <Text style={{ fontWeight: '600' }}>${price} </Text>/
-                      night
+                      <Text style={{ fontWeight: '600' }}>${price_per_year} </Text>
+                      / year
                     </Text>
                   </View>
                 </View>
               </TouchableOpacity>
+              </Link>
             );
           },
         )}
@@ -162,7 +212,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingHorizontal: 16,
   },
-  /** Header */
   header: {
     paddingHorizontal: 16,
     marginBottom: 12,
@@ -184,7 +233,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1d1d1d',
   },
-  /** Card */
   card: {
     position: 'relative',
     borderRadius: 8,
@@ -218,8 +266,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
   },
   cardImg: {
-    width: '100%',
-    height: 160,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 300,
+    height: 180,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    marginHorizontal: 5,
+  },
+  cardImgPlaceholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 180,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },

@@ -29,21 +29,37 @@ const HouseRules = () => {
   const [additionalRules3, setAdditionalRules3] = useState('');
   const [additionalRules4, setAdditionalRules4] = useState('');
 
+  const countTrueValues = () => {
+    return [children, infants, pets, smoking, events, stairs, petsOnProperty, noParking, surveillance
+    ].filter(Boolean).length;
+  };
+
   const handleNext = async() => {
     try {
       setLoading(true);
+      const rate = countTrueValues();
+      let res= rate / 9 * 100;
+      let rating = res / 20
+      rating.toFixed(1);
+
+      //const data = await supabase.from('property').update
+      
+
       const {data: {user}} = await supabase.auth.getUser();
       if (!user) {
         Alert.alert('User not logged in');
         return;
       }
 
+      const{ data: insert } = await supabase.from('property')
+      .insert('rating').eq('userid', user.id).single();
+
       const{ data } = await supabase.from('property')
-      .select('host_id').eq('userid', user.id).single();
+      .select('hostid').eq('userid', user.id).single();
 
       const { error: updateError } = await supabase.from('hiverules')
       .insert({
-        host_id: data?.host_id,
+        host_id: data?.hostid,
         children,
         infants,
         pets,
@@ -241,7 +257,7 @@ const HouseRules = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, backgroundColor: '#fff' }]} onPress={() => router.navigate('./page3')} >
             <Text style={[defaultStyles.btnText, {color: '#044D5B'}]}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={/*handleNext*/() => router.navigate('./page5')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140,}]} onPress={handleNext/*() => router.navigate('./page5')*/} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       

@@ -18,7 +18,7 @@ function campuspage() {
                 </Pressable>
             </View>
             <View>
-                <Pressable onPress={ () => router.navigate('../(tabs)')}>
+                <Pressable onPress={ () => router.replace('../(tabs)')}>
                     <Image source={{uri:'https://vguhsejvmsiaczfththm.supabase.co/storage/v1/object/public/campus_pics/mainpage/KNUST.png'}} 
                             style = {styles.image}>
 
@@ -28,7 +28,7 @@ function campuspage() {
                 </Pressable>
             </View>
             <View>
-                <Pressable onPress={ () => router.navigate('../(tabs)')}>
+                <Pressable onPress={ () => router.replace('../(tabs)')}>
                     <Image source={{uri:'https://vguhsejvmsiaczfththm.supabase.co/storage/v1/object/public/campus_pics/mainpage/University_of_Ghana.png'}} 
                             style = {styles.image}>
 
@@ -38,7 +38,7 @@ function campuspage() {
                 </Pressable>
             </View>
             <View>
-                <Pressable onPress={ () => router.navigate('../(tabs)')}>
+                <Pressable onPress={ () => router.replace('../(tabs)')}>
                     <Image source={{uri:'https://vguhsejvmsiaczfththm.supabase.co/storage/v1/object/public/campus_pics/mainpage/University_of_Cape_Coast.png?t=2024-07-11T03%3A59%3A00.866Z'}} 
                             style = {styles.image}>
 

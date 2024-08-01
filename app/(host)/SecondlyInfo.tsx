@@ -14,8 +14,8 @@ const App = () => {
   const [address2, setAddress2] = useState('');
   const [privateRoom, setPrivateRoom] = useState(false);
   const [sharedRoom, setSharedRoom] = useState(false);
-  const [numPrivateRooms, setNumPrivateRooms] = useState(0);
-  const [numSharedRooms, setNumSharedRooms] = useState(0);
+  const [numPrivateRooms, setNumPrivateRooms] = useState<number | null>(null);
+  const [numSharedRooms, setNumSharedRooms] = useState<number | null>(null);
   const [bathroomOption, setBathroomOption] = useState('no');
 
   const handleSubmit = async () => {
@@ -103,8 +103,8 @@ const App = () => {
       <RNPickerSelect
         onValueChange={(value) => setUniversity(value)}
         items={[
-          { label: 'Kwame Nkrumah University Of Science & Technology', value: 'university1' },
-          { label: 'University of Ghana', value: 'university2' },
+          { label: 'Kwame Nkrumah University Of Science & Technology', value: 'Kwame Nkrumah University Of Science & Technology' },
+          { label: 'University of Ghana', value: 'University of Ghana' },
         ]}
         style={pickerSelectStyles}
         placeholder={{ label: 'Which university is this for?', value: null }}
@@ -148,8 +148,10 @@ const App = () => {
       {privateRoom &&<TextInput
         style={styles.input}
         placeholder="Enter number"
-        value={numPrivateRooms.toString()}
+        value={numPrivateRooms !== null ? numPrivateRooms.toString() : ''}
         onChangeText={(text) => setNumPrivateRooms(parseFloat(text))}
+        //value={numPrivateRooms.toString()}
+        //onChangeText={(text) => setNumPrivateRooms(parseFloat(text))}
         keyboardType="numeric"
       />}
 
@@ -157,7 +159,7 @@ const App = () => {
       {sharedRoom &&<TextInput
         style={styles.input}
         placeholder="Enter number"
-        value={numSharedRooms.toString()}
+        value={numSharedRooms !== null ? numSharedRooms.toString() : ''}
         onChangeText={(text) => setNumSharedRooms(parseFloat(text))}
         keyboardType="numeric"
       />}
@@ -184,7 +186,7 @@ const App = () => {
           <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./FirstlyInfo')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={/*handleSubmit*/()=> router.navigate('./ThirdlyInfo')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={handleSubmit/*()=> router.navigate('./ThirdlyInfo')*/} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
       

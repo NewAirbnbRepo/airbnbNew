@@ -63,7 +63,7 @@ const App = () => {
           {!done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => setDone(true)} >
             <Text style={defaultStyles.btnText}> CONTINUE</Text>
           </TouchableOpacity>}
-          {done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={/*WorkingNumber*/()=> router.navigate('./finish')} >
+          {done &&<TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={WorkingNumber/*()=> router.navigate('./finish')*/} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>}
         </View>

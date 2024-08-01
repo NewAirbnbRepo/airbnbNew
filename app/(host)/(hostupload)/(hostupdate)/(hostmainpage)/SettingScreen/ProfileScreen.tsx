@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { defaultStyles } from '@/constants/Styles';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '@/lib/supabase'
 import { Session } from '@supabase/supabase-js'
@@ -17,7 +17,9 @@ import { Session } from '@supabase/supabase-js'
 //   created_at: string
 // }
 
-const Profile = ({ session }: { session: Session }) => {
+
+const Profile = () => {
+  const [host, setHost] = useState(false)
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [username, setUsername] = useState('');
@@ -202,12 +204,23 @@ const Profile = ({ session }: { session: Session }) => {
             )}
             </View>
             <Text>{username }</Text>
-          <Text>Since {updated_at}</Text>
+            <Text>Since {updated_at ? new Date(updated_at).toLocaleDateString() : 'Unknown'}</Text>
           </View>
+
+        <Link href={'../../../../../(tabs)/index'} asChild> 
+         <TouchableOpacity  onPress={()=> router.navigate('../../../../../(tabs)')} style={{marginTop: 50}}>
+          <Text style={styles.hostButton}>
+            Check Things Out As A User?
+          </Text>
+        </TouchableOpacity> 
+        </Link>
 
       <TouchableOpacity style={[defaultStyles.btn, styles.logoutbtn]} onPress={() => supabase.auth.signOut()} >
             <Text style={defaultStyles.btnText}>LOG OUT</Text>
       </TouchableOpacity>
+
+      
+
           </SafeAreaView>
     
   );

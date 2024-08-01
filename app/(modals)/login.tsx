@@ -29,7 +29,7 @@ const Page = ({ session }: { session: Session }) => {
       Alert.alert('Login failed', error.message);
     } else {
       Alert.alert('Login successful');
-      router.navigate('/');
+      router.replace('/');
     }
   } 
 

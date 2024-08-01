@@ -5,7 +5,7 @@ import { Stack, Tabs, router, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
 import 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native';
+import { AppState, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import { supabase } from '@/lib/supabase';
@@ -45,6 +45,13 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        supabase.auth.startAutoRefresh()
+      } else {
+        supabase.auth.stopAutoRefresh()
+      }
+    })
     if (loaded) {
       SplashScreen.hideAsync();
     }

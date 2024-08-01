@@ -108,7 +108,7 @@ const App = () => {
         <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={() => router.navigate('./SecondlyInfo')} >
             <Text style={defaultStyles.btnText}> BACK</Text>
           </TouchableOpacity> 
-          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={/*yourAmenities*/()=> router.navigate('./finish')} >
+          <TouchableOpacity style={[defaultStyles.btn, {width: 140, }]} onPress={yourAmenities/*()=> router.navigate('./finish')*/} >
             <Text style={defaultStyles.btnText}> NEXT</Text>
           </TouchableOpacity>
         </View>

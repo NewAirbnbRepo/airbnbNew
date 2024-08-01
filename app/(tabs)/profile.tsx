@@ -30,6 +30,7 @@ const profile = ({ session }: { session: Session }) => {
   const [newAvatar_url, setNewAvatar_url] = useState('');
   const [user, setUser] = useState([]);
   const [updated_at, setUpdated_at] = useState('')
+  const [host, setHost] = useState(false)
   
 
   //becoming a host
@@ -41,19 +42,19 @@ const profile = ({ session }: { session: Session }) => {
     
 
       // Insert a new host record with the user's ID
-      const { data, error } = await supabase.from('property').insert([
-        {
-          hostid: user.id,
-          //location: 
-          // Add any other host-specific data here
-        },
-      ]);
-
-      if (error) {
-        console.error('Error becoming a host:', error);
-      } else {
-        console.log('User is now a host');
+      if(user){
+        const {data} = await supabase.from('property').select('hostid').eq('userid', user.id).single()
+          if (data?.hostid) {
+            // If user is not signed in, navigate to welcome page
+            setHost(true)
+          }else if (!data?.hostid) {
+            // If user is not signed in, navigate to welcome page
+            setHost(false)
+          }
       }
+      
+
+      
     } catch (error) {
       console.error('Error becoming a host:', error);
     }
@@ -63,6 +64,7 @@ const profile = ({ session }: { session: Session }) => {
   // Load user data on mount
   useEffect(() => {
    getProfile()
+   handleBecomeAHost()
   }, [])
 
     async function getProfile() {
@@ -227,9 +229,13 @@ const profile = ({ session }: { session: Session }) => {
             <Text>Since {updated_at ? new Date(updated_at).toLocaleDateString() : 'Unknown'}</Text>
           </View>
 
-        <TouchableOpacity  onPress={/*handleBecomeAHost*/ ()=> router.navigate('../(host)/FirstlyInfo')}>
-          <Text style={styles.hostButton}>Log In As A Host?</Text>
-          </TouchableOpacity> 
+        {!host &&<TouchableOpacity  onPress={/*handleBecomeAHost*/ ()=> router.navigate('../(host)/FirstlyInfo')}>
+          <Text style={styles.hostButton}>Sign Up As A Host?</Text>
+        </TouchableOpacity> }
+
+        {host &&<TouchableOpacity  onPress={/*handleBecomeAHost*/ ()=> router.navigate('../(host)/(hostupload)/(hostupdate)/(hostmainpage)/MainTabNavigator/MainTabNavigator')}>
+          <Text style={styles.hostButton}>Manage As A Host?</Text>
+        </TouchableOpacity>}
           
 
       <TouchableOpacity style={[defaultStyles.btn, styles.logoutbtn]} onPress={() => supabase.auth.signOut()} >
